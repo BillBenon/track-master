@@ -1,8 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato&family=Work+Sans&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-* {
-  font-family: "Lato", sans-serif;
+#complex-form_username,
+#complex-form_password {
+  background-color: transparent !important;
+  color: white;
+}
+#complex-form_username::placeholder,
+#complex-form_password#complex-form_password::placeholder {
+  color: gray !important;
 }
