@@ -21,7 +21,7 @@ function Login() {
 
   return (
     <div className="flex w-full h-screen">
-      <div className="relative h-full w-1/2">
+      <div className="relative h-full w-0 overflow-hidden md:w-1/2">
         <div className="absolute bg-[rgba(10,10,10,0.84)] px-10 py-5 h-full text-white flex flex-col justify-between  w-full">
           <img src={logo} className="h-10 w-10" />
           <div className="leading-[4rem] text-5xl font-bold">
@@ -44,9 +44,9 @@ function Login() {
           className="w-full h-full"
         ></div>
       </div>
-      <div className="w-1/2 text-white h-full flex flex-col justify-end items-center bg-[#141414]">
+      <div className="md:w-1/2 w-full text-white h-full flex flex-col justify-end items-center bg-[#141414]">
         <div className="flex flex-col">
-          <h1 className=" text-3xl mb-7 font-semibold">Login to TrackMaster</h1>
+          <h1 className=" text-3xl mb-7 text-center font-semibold">Login to TrackMaster</h1>
           <Form
             layout="vertical"
             name="complex-form"
