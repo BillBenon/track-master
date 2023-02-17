@@ -1,26 +1,27 @@
 import React from "react";
 import logo from "../assets/logo.png";
-import { ReactComponent as HomeSvg } from "../assets/home.svg";
+import {HomeIcon} from "../assets/icons/index";
+
 function Sidebar() {
   const sides = [
     {
-      svg: <HomeSvg />,
+      svg: <HomeIcon />,
       text: "Home",
     },
     {
-      svg: <HomeSvg />,
+      svg: <HomeIcon />,
       text: "Data",
     },
     {
-      svg: <HomeSvg />,
+      svg: <HomeIcon />,
       text: "Resources",
     },
     {
-      svg: <HomeSvg />,
+      svg: <HomeIcon />,
       text: "Credits",
     },
     {
-      svg: <HomeSvg />,
+      svg: <HomeIcon />,
       text: "Settings",
     },
   ];
@@ -43,7 +44,7 @@ function Sidebar() {
         ))}
       </div>
       <div className="flex items-center w-[90%] gap-4">
-        <HomeSvg />
+        <HomeIcon />
         <div>Logout</div>
       </div>
     </div>
