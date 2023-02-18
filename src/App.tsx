@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, redirect } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Settings from "./components/Settings";
 import Home from "./components/Home/Home";
@@ -110,6 +110,7 @@ function App() {
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
       </div>
