@@ -121,13 +121,7 @@ function App() {
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="*" element={<Dashboard />}>
-                <Route path="" element={<Home />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="data" element={<Data />} />
-                <Route path="resources" element={<Resources />} />
-                <Route path="Credits" element={<Credits />} />
-              </Route>
+              <Route path="*" element={<Dashboard />} />
             </Routes>
           </BrowserRouter>
         </div>

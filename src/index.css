@@ -16,6 +16,10 @@
   .buttonOutline {
     @apply w-[49%] py-4 bg-transparent text-red border border-red rounded-lg text-sm font-medium transition duration-300;
   }
+
+  .resources::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 table {
@@ -43,4 +47,5 @@ table {
 .map-container {
   width: 100%;
   height: 30rem;
+  border-radius: 1rem;
 }
