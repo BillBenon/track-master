@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Settings from "./components/settings/Settings";
@@ -12,6 +12,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { ToastContainer } from "react-toastify";
+import { setUserState } from "./features/user/userReducer";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 
 const theme = createTheme({
   components: {
@@ -110,21 +113,41 @@ const theme = createTheme({
 });
 
 function App() {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    const cachedUserData = window.localStorage.getItem("user");
+
+    if (cachedUserData != null) {
+      if (JSON.parse(cachedUserData).hasOwnProperty("username"))
+        dispatch(setUserState(JSON.parse(cachedUserData)));
+    }
+  }, []);
+
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <ThemeProvider theme={theme}>
         <div className="w-screen h-screen">
           <BrowserRouter>
+            <ToastContainer />
             <Routes>
-              <Route path="/" element={<Navigate to="/login" />} />
-              <Route path="/dashboard" element={<Dashboard />}>
-                <Route path="" element={<Home />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="data" element={<Data />} />
-                <Route path="resources" element={<Resources />} />
-                <Route path="Credits" element={<Credits />} />
-              </Route>
-              <Route path="/login" element={<Login />} />
+              <Route
+                path="/"
+                element={
+                  user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+                }
+              />
+              {user ? (
+                <Route path="/dashboard" element={<Dashboard />}>
+                  <Route path="" element={<Home />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="data" element={<Data />} />
+                  <Route path="resources" element={<Resources />} />
+                  <Route path="Credits" element={<Credits />} />
+                </Route>
+              ) : <Route path="/login" element={<Login />} />}
+              <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<Dashboard />} />
             </Routes>
