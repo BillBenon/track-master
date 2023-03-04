@@ -37,7 +37,7 @@ const Login = () => {
     });
   };
 
-  useEffect(() => {}, [mutationResult]);
+  useEffect(() => { }, [mutationResult]);
 
   const handleLogin = async () => {
     try {
@@ -51,6 +51,11 @@ const Login = () => {
       toast.success("logged in successfully!");
       navigate("/dashboard");
     } catch (err: any) {
+      if (err.status == 500) {
+        return toast.error("Server has some problems.", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
       toast.error("Invalid credentials.", {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -113,6 +118,7 @@ const Login = () => {
             userCredentialErrors.username ? "Fill in a correct username" : ""
           }
           error={userCredentialErrors.username}
+          autoComplete="off"
         />
       </div>
       <div className="w-[50%] h-[5.5rem] flex flex-col items-start gap-2 ssm:w-[70%] ssm1:w-[80%] xss:w-full 2lg:w-[70%]">
@@ -152,6 +158,7 @@ const Login = () => {
           }
           error={userCredentialErrors.password}
           type={passwordVisible ? "text" : "password"}
+          autoComplete="off"
         />
       </div>
       <div className="w-[48%] h-[1rem] flex justify-between lMd:w-[70%] ssm:w-[70%] 2lg:w-[70%]">
@@ -180,10 +187,9 @@ const Login = () => {
         </Link>
       </div>
       <button
-        className={`button hover:buttonOutline ssm:w-[70%] 2lg:w-[70%] 2lg:hover:w-[70%] ${
-          mutationResult.isLoading &&
+        className={`button hover:buttonOutline ssm:w-[70%] 2lg:w-[70%] 2lg:hover:w-[70%] ${mutationResult.isLoading &&
           "bg-loading hover:bg-loading text-primary hover:text-primary hover:border-0"
-        }`}
+          }`}
         onClick={() => formRef.current?.click()}
         disabled={mutationResult.isLoading}
       >

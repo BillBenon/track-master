@@ -7,18 +7,22 @@ export const dataApiSlice = createApi({
   }),
   endpoints: (builder) => {
     return {
-      fetchData: builder.query({
-        query() {
-          return `/api/data`;
-        },
-      }),
       fetchAllCountries: builder.query({
         query() {
           return `https://restcountries.com/v3.1/all?fields=flag,name`;
+        },
+      }),
+      fetchAllVisitorsData: builder.query<any, number | string | void>({
+        query(page: number | string) {
+          if (page != undefined) {
+            return `/api/data?page=${page}`;
+          }
+          return `/api/data`;
         },
       }),
     };
   },
 });
 
-export const { useFetchDataQuery, useFetchAllCountriesQuery } = dataApiSlice;
+export const { useFetchAllCountriesQuery, useFetchAllVisitorsDataQuery } =
+  dataApiSlice;

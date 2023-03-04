@@ -35,7 +35,7 @@ const Signup = () => {
 
   useEffect(() => {}, [mutationResult]);
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     try {
       await signupUser({
         email: userCredentials.username,
@@ -45,7 +45,12 @@ const Signup = () => {
       navigate("/login");
     } catch (err: any) {
       if (err.status == 422) {
-        return toast.error("User already exists.", {
+        return toast.error("User already exists", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+      if (err.status == 500) {
+        return toast.error("Server has some problems.", {
           position: toast.POSITION.TOP_CENTER,
         });
       }
@@ -65,7 +70,7 @@ const Signup = () => {
       userCredentials.password &&
       userCredentials.confirmPassword == userCredentials.password
     ) {
-      handleLogin();
+      handleSignup();
     } else {
       if (!userCredentials.password) {
         setUserCredentialErrors((prevCredErrors) => {
@@ -126,6 +131,7 @@ const Signup = () => {
             userCredentialErrors.username ? "Fill in a correct username" : ""
           }
           error={userCredentialErrors.username}
+          autoComplete="off"
         />
       </div>
       <div className="w-[50%] h-[5.5rem] flex flex-col items-start gap-2 ssm:w-[70%] ssm1:w-[80%] xss:w-full 2lg:w-[70%]">
@@ -165,6 +171,7 @@ const Signup = () => {
           }
           error={userCredentialErrors.password}
           type={passwordVisible ? "text" : "password"}
+          autoComplete="off"
         />
       </div>
       <div className="w-[50%] h-[5.5rem] flex flex-col items-start gap-2 ssm:w-[70%] ssm1:w-[80%] xss:w-full 2lg:w-[70%]">
@@ -204,6 +211,7 @@ const Signup = () => {
           }
           error={userCredentialErrors.confirmPassword}
           type={confPassVisible ? "text" : "password"}
+          autoComplete="off"
         />
       </div>
       <button

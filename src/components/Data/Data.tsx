@@ -14,6 +14,9 @@ import { useEffect, useState } from "react";
 import CustomizedPagination from "./CustomPagination";
 import LCardSm from "./LCardSm";
 import HeadMaker from "../Global/HeadMaker";
+import { useFetchAllCountriesQuery, useFetchAllVisitorsDataQuery } from "../../services/data-api-slice";
+import { useAppDispatch } from "../../app/hooks";
+import { setTableData } from "../../features/data/dataReducer";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,19 +30,12 @@ const MenuProps = {
 };
 
 const Data = () => {
-  const [countries, setCountries] = useState([]);
+  const dispatch = useAppDispatch()
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const getAllCountries = async () => {
-    const data = await fetch(
-      "https://restcountries.com/v3.1/all?fields=flag,name"
-    ).then((data) => data.json());
-    setCountries(data);
-  };
-
-  useEffect(() => {
-    getAllCountries();
-    console.log(countries); 
-  }, []);
+  const { data: countriesData, isLoading: isCountriesLoading, isError: isCountriesError, isSuccess: isCountriesSuccess } = useFetchAllCountriesQuery({})
+  const { data: generalData, isLoading, isError, isSuccess } = useFetchAllVisitorsDataQuery(currentPage)
+  console.log(generalData)
 
   const [country, setCountry] = useState<string[]>([]);
 
@@ -50,8 +46,6 @@ const Data = () => {
     setCountry(typeof value === "string" ? value.split(",") : value);
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageCount = 10;
 
   const handlePrevClick = () => {
     setCurrentPage((prevPage) => prevPage - 1);
@@ -75,7 +69,7 @@ const Data = () => {
 
       <div className="w-full h-full flex flex-col gap-8 bg-gray p-5 rounded-xl lTable:pr-2 datar:w-[95%] datar:mr-4">
         <span className="text-white text-3xl font-bold lMd2:text-2xl">
-          Visitors: 5630 users
+          Visitors: {isSuccess ? generalData?.users.length : isError ? "Failed to fetch..." : 0}
         </span>
         <div className="w-full h-full flex flex-col justify-start gap-2 ">
           <span className="text-white font-bold text-sm">Search</span>
@@ -100,7 +94,7 @@ const Data = () => {
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
-                {countries?.map((cname: any) => (
+                {countriesData?.map((cname: any) => (
                   <MenuItem
                     key={cname.name.official}
                     value={cname.name.official}
@@ -126,7 +120,7 @@ const Data = () => {
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
               >
-                {countries?.map((cname: any) => (
+                {countriesData?.map((cname: any) => (
                   <MenuItem
                     key={cname.name.official}
                     value={cname.name.official}
@@ -170,33 +164,33 @@ const Data = () => {
             </span>
           </div>
           <div
-            className={`Mytable w-full h-full overflow-x-hidden overflow-y-auto max-h-[26rem] text-white font-[Poppins] ${
-              lgScroll && "resources"
-            } `}
+            className={`Mytable w-full h-full overflow-x-hidden overflow-y-auto ${generalData?.data.length > 20 ? "max-h-[30rem]" : "max-h-[26rem]"} text-white font-[Poppins] ${lgScroll && "resources"
+              } `}
           >
-            {overallVisits.map((data) => {
+            {isLoading ? <h1 className="text-white">Loading new data...</h1> : generalData?.data.map((data: { ID: any; IP: any; Country: any; CountryFlag: any; Domain: any; createdAt: any; ISPDomain: any; Owner: any; ISP: any; }) => {
               const {
-                id,
-                ipAdress,
-                country,
-                cflag,
-                domain,
-                time,
-                isp,
-                owner,
-                ispDomain,
+                ID,
+                IP,
+                Country,
+                CountryFlag,
+                Domain,
+                createdAt,
+                ISPDomain,
+                Owner,
+                ISP,
               } = data;
               return (
                 <LongTableRow
-                  id={id}
-                  country={country}
-                  cflag={cflag}
-                  domain={domain}
-                  time={time}
-                  ipAdress={ipAdress}
-                  isp={isp}
-                  owner={owner}
-                  ispDomain={ispDomain}
+                  id={ID}
+                  country={Country}
+                  cflag={CountryFlag}
+                  domain={Domain}
+                  time={createdAt}
+                  ipAdress={IP}
+                  isp={ISP}
+                  owner={Owner}
+                  ispDomain={ISPDomain}
+                  key={ID}
                 />
               );
             })}
@@ -207,37 +201,37 @@ const Data = () => {
           <span className="text-3xl hidden font-bold text-white tracking-wider lMd2:block lMd2:justify-self-start datar:hidden">
             Today Visits
           </span>
-          {overallVisits.map((data, index) => {
+          {isLoading ? <h1 className="text-white">Loading new data...</h1> : generalData?.data.map((data: { ID: any; IP: any; Country: any; CountryFlag: any; Domain: any; createdAt: any; ISPDomain: any; Owner: any; ISP: any; }) => {
             const {
-              id,
-              ipAdress,
-              country,
-              cflag,
-              domain,
-              time,
-              isp,
-              ispDomain,
-              owner,
+              ID,
+              IP,
+              Country,
+              CountryFlag,
+              Domain,
+              createdAt,
+              ISPDomain,
+              Owner,
+              ISP,
             } = data;
             return (
               <LCardSm
-                id={id}
-                country={country}
-                cflag={cflag}
-                domain={domain}
-                time={time}
-                ipAdress={ipAdress}
-                key={index}
-                isp={isp}
-                ispDomain={ispDomain}
-                owner={owner}
+                id={ID}
+                country={Country}
+                cflag={CountryFlag}
+                domain={Domain}
+                time={createdAt}
+                ipAdress={IP}
+                isp={ISP}
+                owner={Owner}
+                ispDomain={ISPDomain}
+                key={ID}
               />
             );
           })}
         </div>
         <div className="w-full flex justify-end">
           <CustomizedPagination
-            count={pageCount}
+            count={Math.ceil(generalData?.data.length / 20)}
             onNextClick={handleNextClick}
             onPrevClick={handlePrevClick}
           />

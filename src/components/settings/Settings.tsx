@@ -48,14 +48,24 @@ const Settings = () => {
   const handleUpdatePassword = async () => {
     try {
       await updateUser({
+        currentPassword: formData.currentPassword,
         password: formData.newPassword,
         userId: user.userId,
         token: user.token,
         email: user.username,
       }).unwrap();
+
       return toast.success("password updated successfully");
+
     } catch (err: any) {
-      toast.error("unable to update the password, try again later.");
+      if (err.status == 500) {
+        return toast.error("Server has some problems.", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+      toast.error("Invalid credentials.", {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
